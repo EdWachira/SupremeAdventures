@@ -16,42 +16,46 @@ const tourRouter = require("./routes/tourRouter");
 const userRouter = require("./routes/userRouter");
 const reviewRouter = require("./routes/reviewRouter");
 const bookingRouter = require("./routes/bookingRouter");
-const bookingController = require("./controllers/bookingController");
+// const bookingController = require("./controllers/bookingController");
 const viewRouter = require("./routes/viewRoutes");
 
 // Start express app
 const app = express();
 
-app.enable("trust-proxy");
+// app.enable("trust-proxy");
 
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 // Access-Control-Allow-Origin
-app.use(cors());
+// app.use(cors());
 
-app.options("*", cors());
+// app.options("*", cors());
 
 // Serving static files
 app.use(express.static(path.join(__dirname, "public")));
 
 // Set security HTTP Headers
-app.use(helmet({ crossOriginEmbedderPolicy: false, originAgentCluster: true }));
-app.use(
-  helmet.contentSecurityPolicy({
-    useDefaults: true,
-    directives: {
-      defaultSrc: ["'self'", "data:", "blob:", "https://js.stripe.com/"],
-      imgSrc: ["'self'", "https: data: blob:"],
-      scriptSrc: [
-        "'self'",
-        "https://*.cloudflare.com",
-        "https://js.stripe.com/v3/",
-      ],
-      // connectSrc: ["'self'", "blob:"],
-    },
-  })
-);
+// app.use(helmet({ crossOriginEmbedderPolicy: false, originAgentCluster: true }));
+app.use(helmet());
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     useDefaults: true,
+//     directives: {
+//       defaultSrc: ["'self'", "data:", "blob:", "https://js.stripe.com/"],
+//       imgSrc: ["'self'", "https: data: blob:"],
+//       scriptSrc: [
+//         "'self'",
+//         "https://*.cloudflare.com",
+//         "https://js.stripe.com/v3/",
+//       ],
+//       // connectSrc: ["'self'", "blob:"],
+//     },
+//   })
+// );
 
 const limiter = rateLimit({
   max: 100,
@@ -61,11 +65,11 @@ const limiter = rateLimit({
 
 app.use("/api", limiter);
 
-app.post(
-  "/webhook-checkout",
-  express.raw({ type: "application/json" }),
-  bookingController.webHookCheckout
-);
+// app.post(
+//   "/webhook-checkout",
+//   express.raw({ type: "application/json" }),
+//   bookingController.webHookCheckout
+// );
 
 app.use(express.json({ limit: "10kb" }));
 app.use(express.urlencoded({ extended: true, limit: "10kb" }));
@@ -88,7 +92,7 @@ app.use(
   })
 );
 
-app.use(compression());
+// app.use(compression());
 
 app.use("/", viewRouter);
 app.use("/api/v1/tours", tourRouter);

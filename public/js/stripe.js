@@ -1,11 +1,12 @@
 /* eslint-disable */
 import axios from "axios";
 import { showAlert } from "./alerts";
+const stripe = Stripe(
+  "pk_test_51M40IKLWFD9go2aioOdXJZYnWOzR9PJHxyxaXdNmXrItzdXkjExpnIHZsjotSudHyPINKdIk89OcL39bciMV074i00ydnnIvzS"
+);
 
 export const bookTour = async (tourId) => {
-  const stripe = Stripe(
-    "pk_test_51M40IKLWFD9go2aioOdXJZYnWOzR9PJHxyxaXdNmXrItzdXkjExpnIHZsjotSudHyPINKdIk89OcL39bciMV074i00ydnnIvzS"
-  );
+
   try {
     const session = await axios({
       method: "GET",

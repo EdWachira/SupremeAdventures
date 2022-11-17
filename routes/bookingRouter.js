@@ -10,7 +10,7 @@ router
   .route("/checkout-session/:tourId")
   .get(authController.protect, bookingController.getCheckoutSessuion);
 
-router.use(authController.restrictTo("admin", "lead-guid"));
+router.use(authController.restrictTo("admin", "lead-guide"));
 
 router
   .route("/")
